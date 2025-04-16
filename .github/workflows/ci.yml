@@ -1,0 +1,29 @@
+name: Code Quality & Test Check  # 工作流名称
+on: [pull_request]  # 触发条件：当收到PR时自动运行
+
+jobs:
+  # 定义一个名为 "code-check" 的任务
+  code-check:
+    runs-on: ubuntu-latest  # 运行环境：最新的Ubuntu系统
+    steps:
+      - name: Checkout Code  # 步骤1：拉取代码
+        uses: actions/checkout@v4  # 使用GitHub官方Action获取代码
+
+      - name: Set Up Python  # 步骤2：安装Python（假设项目为Python技术栈）
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"  # 指定Python版本
+
+      - name: Install Dependencies  # 步骤3：安装依赖
+        run: |
+          pip install -r requirements.txt  # 安装项目依赖
+
+      - name: Run Pylint  # 步骤4：代码规范检查（以Pylint为例）
+        run: |
+          pylint src/  # 对src目录下的代码进行语法和规范检查
+          # 若需严格校验，可添加 --exit-zero=false 使检查失败时终止流程
+
+      - name: Run Unit Tests  # 步骤5：运行单元测试
+        run: |
+          python -m pytest tests/  # 使用pytest运行tests目录下的测试用例
+          # 可添加参数 --cov=src/ 生成测试覆盖率报告（需配合Coverage工具）
